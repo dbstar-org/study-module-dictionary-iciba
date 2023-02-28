@@ -48,7 +48,7 @@ public final class ExerciseWordServiceImplemental extends StudyImplementals<Exer
   }
 
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     super.afterPropertiesSet();
     notNull(wordService, "wordService is null");
     notNull(exerciseBookService, "exerciseBookService is null");

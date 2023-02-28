@@ -6,6 +6,6 @@ import io.github.dbstarll.study.entity.Principal;
 import io.github.dbstarll.study.service.attach.PrincipalServiceAttach;
 
 @EntityService
-public interface PrincipalService extends StudyServices<Principal>, SourceAttach<Principal>, PrincipalServiceAttach {
+public interface PrincipalService extends StudyServices<Principal>, SourceAttach, PrincipalServiceAttach {
 
 }

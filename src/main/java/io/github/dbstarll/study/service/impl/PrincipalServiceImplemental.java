@@ -56,7 +56,7 @@ public final class PrincipalServiceImplemental extends StudyImplementals<Princip
   }
 
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     super.afterPropertiesSet();
     notNull(entityCodec, "entityCodec is null");
     notNull(exerciseBookCodec, "exerciseBookCodec is null");

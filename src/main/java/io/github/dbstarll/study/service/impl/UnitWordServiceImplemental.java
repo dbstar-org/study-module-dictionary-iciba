@@ -68,7 +68,7 @@ public final class UnitWordServiceImplemental extends StudyImplementals<UnitWord
   }
 
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     super.afterPropertiesSet();
     notNull(wordService, "wordService is null");
     notNull(unitService, "unitService is null");

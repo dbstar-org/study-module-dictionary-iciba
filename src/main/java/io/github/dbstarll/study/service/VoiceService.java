@@ -6,6 +6,6 @@ import io.github.dbstarll.dubai.model.service.attach.SourceAttach;
 import io.github.dbstarll.study.entity.Voice;
 
 @EntityService
-public interface VoiceService extends StudyServices<Voice>, SourceAttach<Voice>, ContentAttach<Voice> {
+public interface VoiceService extends StudyServices<Voice>, SourceAttach, ContentAttach {
 
 }

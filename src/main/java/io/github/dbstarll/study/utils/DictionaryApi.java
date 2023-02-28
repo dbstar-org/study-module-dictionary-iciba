@@ -8,13 +8,13 @@ import io.github.dbstarll.study.entity.Word;
 import io.github.dbstarll.study.entity.ext.Exchange;
 import io.github.dbstarll.study.entity.ext.Part;
 import io.github.dbstarll.study.entity.ext.Phonetic;
-import io.github.dbstarll.utils.lang.StandardCharsets;
 import io.github.dbstarll.utils.lang.wrapper.IterableWrapper;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.apache.commons.lang3.Validate.notBlank;

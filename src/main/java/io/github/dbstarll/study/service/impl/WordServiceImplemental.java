@@ -55,7 +55,7 @@ public final class WordServiceImplemental extends StudyImplementals<Word, WordSe
   }
 
   @Override
-  public void afterPropertiesSet() throws Exception {
+  public void afterPropertiesSet() {
     super.afterPropertiesSet();
     notNull(voiceService, "voiceService is null");
   }

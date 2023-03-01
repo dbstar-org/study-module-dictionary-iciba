@@ -5,6 +5,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.dbstarll.dubai.model.entity.EntityFactory;
 import io.github.dbstarll.study.classify.exchange.ExchangeUtils;
 import io.github.dbstarll.study.entity.Word;
+import io.github.dbstarll.study.entity.enums.ExchangeKey;
+import io.github.dbstarll.study.entity.enums.PartKey;
+import io.github.dbstarll.study.entity.enums.PhoneticKey;
 import io.github.dbstarll.study.entity.ext.Exchange;
 import io.github.dbstarll.study.entity.ext.Part;
 import io.github.dbstarll.study.entity.ext.Phonetic;
@@ -15,7 +18,11 @@ import org.apache.commons.lang3.StringUtils;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
@@ -72,9 +79,9 @@ public class DictionaryApi {
         final String key = entry.getKey();
         final JsonNode exchangeNode = entry.getValue();
         if (key.startsWith("word_") && exchangeNode.isArray() && exchangeNode.size() > 0) {
-          final Word.ExchangeKey exchangeKey;
+          final ExchangeKey exchangeKey;
           try {
-            exchangeKey = Word.ExchangeKey.valueOf(key.substring(5));
+            exchangeKey = ExchangeKey.valueOf(key.substring(5));
           } catch (IllegalArgumentException ex) {
             throw new IllegalArgumentException("Unknown ExchangeKey:" + key, ex);
           }
@@ -91,7 +98,7 @@ public class DictionaryApi {
   private static Set<Phonetic> parsePhonetics(final JsonNode node) throws IOException {
     final Set<Phonetic> phonetics = new HashSet<>();
     if (node != null && !node.isNull()) {
-      for (Word.PhoneticKey key : Word.PhoneticKey.values()) {
+      for (PhoneticKey key : PhoneticKey.values()) {
         final JsonNode symbolNode = node.get("ph_" + key.name());
         if (symbolNode != null && !symbolNode.isNull()) {
           final String symbol = symbolNode.asText().trim();
@@ -119,7 +126,7 @@ public class DictionaryApi {
         final String key = partNode.get("part").asText();
         final JsonNode meansNode = partNode.get("means");
         if (key.endsWith(".") && meansNode != null && meansNode.isArray() && meansNode.size() > 0) {
-          final List<Word.PartKey> partKey = parsePartKey(key);
+          final List<PartKey> partKey = parsePartKey(key);
           final List<String> means = new ArrayList<>(meansNode.size());
           for (JsonNode mean : meansNode) {
             means.add(mean.asText().trim());
@@ -131,14 +138,14 @@ public class DictionaryApi {
     return parts.isEmpty() ? null : parts;
   }
 
-  private static List<Word.PartKey> parsePartKey(final String key) {
-    final List<Word.PartKey> keys = new ArrayList<>();
+  private static List<PartKey> parsePartKey(final String key) {
+    final List<PartKey> keys = new ArrayList<>();
     for (String k : StringUtils.split(key.replaceAll("\\.| ", "").replace('-', '_'), '&')) {
       try {
-        keys.add(Word.PartKey.valueOf(k));
+        keys.add(PartKey.valueOf(k));
       } catch (IllegalArgumentException ex) {
         try {
-          keys.add(Word.PartKey.valueOf('_' + k));
+          keys.add(PartKey.valueOf('_' + k));
         } catch (IllegalArgumentException ex2) {
           throw new IllegalArgumentException("Unknown PartKey:" + key, ex);
         }

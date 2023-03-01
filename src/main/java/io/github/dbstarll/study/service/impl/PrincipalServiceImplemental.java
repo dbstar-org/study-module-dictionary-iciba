@@ -70,7 +70,7 @@ public final class PrincipalServiceImplemental extends StudyImplementals<Princip
       pipeline.add(Aggregates.match(filter));
     }
     pipeline.add(exerciseLookup());
-    query.apply(pipeline);
+    pipeline.addAll(query.apply());
 
     return getCollection().aggregate(pipeline, BsonDocument.class)
             .map(new Function<BsonDocument, Entry<Principal, ExerciseBook>>() {

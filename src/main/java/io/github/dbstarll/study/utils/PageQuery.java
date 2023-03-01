@@ -7,6 +7,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.bson.conversions.Bson;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import static org.apache.commons.lang3.Validate.notNull;
@@ -79,22 +81,22 @@ public class PageQuery implements Serializable {
     return iterable;
   }
 
-  /**
-   * 根据Page内容来修正pipeline.
-   *
-   * @param pipeline pipeline
-   * @return 修正后的pipeline
-   */
-  public List<Bson> apply(final List<Bson> pipeline) {
-    if (StringUtils.isNotBlank(sort)) {
-      pipeline.add(Aggregates.sort(Order.asc == order ? Sorts.ascending(sort) : Sorts.descending(sort)));
-    }
-    if (offset > 0) {
-      pipeline.add(Aggregates.skip(offset));
-    }
-    if (limit > 0) {
-      pipeline.add(Aggregates.limit(limit));
-    }
-    return pipeline;
+    /**
+     * 根据Page内容来修正pipeline.
+     *
+     * @return 修正后的pipeline
+     */
+    public Collection<Bson> apply() {
+        final List<Bson> pipeline = new ArrayList<>();
+        if (StringUtils.isNotBlank(sort)) {
+            pipeline.add(Aggregates.sort(Order.asc == order ? Sorts.ascending(sort) : Sorts.descending(sort)));
+        }
+        if (offset > 0) {
+            pipeline.add(Aggregates.skip(offset));
+        }
+        if (limit > 0) {
+            pipeline.add(Aggregates.limit(limit));
+        }
+        return pipeline;
   }
 }

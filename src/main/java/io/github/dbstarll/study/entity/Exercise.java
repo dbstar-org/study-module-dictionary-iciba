@@ -3,6 +3,7 @@ package io.github.dbstarll.study.entity;
 import io.github.dbstarll.dubai.model.entity.Table;
 import io.github.dbstarll.dubai.model.entity.info.Describable;
 import io.github.dbstarll.dubai.model.entity.info.Namable;
+import io.github.dbstarll.study.entity.enums.ExchangeKey;
 import io.github.dbstarll.study.entity.join.BookBase;
 import io.github.dbstarll.study.entity.join.WordBase;
 
@@ -28,9 +29,9 @@ public interface Exercise extends StudyEntities, WordBase, BookBase, Namable, De
 
   void setExerciseKey(ExerciseKey exerciseKey);
 
-  Word.ExchangeKey getExchangeKey();
+  ExchangeKey getExchangeKey();
 
-  void setExchangeKey(Word.ExchangeKey exchangeKey);
+  void setExchangeKey(ExchangeKey exchangeKey);
 
   int getLevel();
 

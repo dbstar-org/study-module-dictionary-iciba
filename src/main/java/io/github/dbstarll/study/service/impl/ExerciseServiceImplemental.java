@@ -8,7 +8,7 @@ import io.github.dbstarll.dubai.model.collection.Collection;
 import io.github.dbstarll.dubai.model.entity.Entity;
 import io.github.dbstarll.dubai.model.entity.info.Describable;
 import io.github.dbstarll.study.entity.Exercise;
-import io.github.dbstarll.study.entity.Word;
+import io.github.dbstarll.study.entity.enums.ExchangeKey;
 import io.github.dbstarll.study.service.ExerciseService;
 import io.github.dbstarll.study.service.attach.ExerciseServiceAttach;
 import io.github.dbstarll.utils.lang.wrapper.EntryWrapper;
@@ -29,7 +29,7 @@ public final class ExerciseServiceImplemental extends StudyImplementals<Exercise
 
   @Override
   public Iterable<Entry<String, Integer>> countErrors(ObjectId bookId, ObjectId wordId, Exercise.ExerciseKey exerciseKey,
-                                                      Word.ExchangeKey exchangeKey) {
+                                                      ExchangeKey exchangeKey) {
     final Bson match = Aggregates.match(Filters.and(service.filterByBookId(bookId), service.filterByWordId(wordId),
             Filters.eq("exerciseKey", exerciseKey), Filters.eq("correct", false),
             exchangeKey == null ? Filters.exists("exchangeKey", false) : Filters.eq("exchangeKey", exchangeKey)));

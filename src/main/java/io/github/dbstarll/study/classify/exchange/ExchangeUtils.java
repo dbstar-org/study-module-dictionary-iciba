@@ -9,13 +9,13 @@ public final class ExchangeUtils {
   private static final Map<ExchangeKey, ExchangeClassifier> classifiers = new HashMap<>();
 
   static {
-    classifiers.put(ExchangeKey.pl, new PlExchangeClassifier());
-    classifiers.put(ExchangeKey.ing, new IngExchangeClassifier());
-    classifiers.put(ExchangeKey.done, new DoneExchangeClassifier());
-    classifiers.put(ExchangeKey.third, classifiers.get(ExchangeKey.pl));
-    classifiers.put(ExchangeKey.past, classifiers.get(ExchangeKey.done));
-    classifiers.put(ExchangeKey.er, new ErExchangeClassifier());
-    classifiers.put(ExchangeKey.est, new EstExchangeClassifier());
+    classifiers.put(ExchangeKey.PL, new PlExchangeClassifier());
+    classifiers.put(ExchangeKey.ING, new IngExchangeClassifier());
+    classifiers.put(ExchangeKey.DONE, new DoneExchangeClassifier());
+    classifiers.put(ExchangeKey.THIRD, classifiers.get(ExchangeKey.PL));
+    classifiers.put(ExchangeKey.PAST, classifiers.get(ExchangeKey.DONE));
+    classifiers.put(ExchangeKey.ER, new ErExchangeClassifier());
+    classifiers.put(ExchangeKey.EST, new EstExchangeClassifier());
   }
 
   private ExchangeUtils() {

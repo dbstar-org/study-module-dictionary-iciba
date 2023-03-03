@@ -3,7 +3,6 @@ package io.github.dbstarll.study.utils;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.github.dbstarll.dubai.model.entity.EntityFactory;
-import io.github.dbstarll.dubai.model.entity.utils.EnumValueHelper;
 import io.github.dbstarll.study.classify.exchange.ExchangeUtils;
 import io.github.dbstarll.study.entity.Word;
 import io.github.dbstarll.study.entity.enums.ExchangeKey;
@@ -12,6 +11,7 @@ import io.github.dbstarll.study.entity.enums.PhoneticKey;
 import io.github.dbstarll.study.entity.ext.Exchange;
 import io.github.dbstarll.study.entity.ext.Part;
 import io.github.dbstarll.study.entity.ext.Phonetic;
+import io.github.dbstarll.utils.lang.enums.EnumUtils;
 import io.github.dbstarll.utils.lang.wrapper.IterableWrapper;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -30,9 +30,6 @@ import static org.apache.commons.lang3.Validate.notNull;
 
 public class DictionaryApi {
     private static final String BASE_URL = "http://dict-co.iciba.com/api/dictionary.php?type=json";
-
-    private static final EnumValueHelper<ExchangeKey> EXCHANGE_KEY_HELPER = new EnumValueHelper<>(ExchangeKey.class);
-    private static final EnumValueHelper<PartKey> PART_KEY_HELPER = new EnumValueHelper<>(PartKey.class);
 
     private final String queryUrl;
     private final ObjectMapper objectMapper;
@@ -85,7 +82,7 @@ public class DictionaryApi {
                 if (key.startsWith("word_") && exchangeNode.isArray() && exchangeNode.size() > 0) {
                     final ExchangeKey exchangeKey;
                     try {
-                        exchangeKey = EXCHANGE_KEY_HELPER.valueOf(key.substring(5));
+                        exchangeKey = EnumUtils.valueOf(ExchangeKey.class, key.substring(5));
                     } catch (IllegalArgumentException ex) {
                         throw new IllegalArgumentException("Unknown ExchangeKey:" + key, ex);
                     }
@@ -146,10 +143,10 @@ public class DictionaryApi {
         final List<PartKey> keys = new ArrayList<>();
         for (String k : StringUtils.split(key.replaceAll("\\.| ", "").replace('-', '_'), '&')) {
             try {
-                keys.add(PART_KEY_HELPER.valueOf(k));
+                keys.add(EnumUtils.valueOf(PartKey.class, k));
             } catch (IllegalArgumentException ex) {
                 try {
-                    keys.add(PART_KEY_HELPER.valueOf('_' + k));
+                    keys.add(EnumUtils.valueOf(PartKey.class, '_' + k));
                 } catch (IllegalArgumentException ex2) {
                     throw new IllegalArgumentException("Unknown PartKey:" + key, ex);
                 }

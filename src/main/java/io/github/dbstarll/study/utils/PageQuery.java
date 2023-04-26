@@ -16,7 +16,7 @@ import static org.apache.commons.lang3.Validate.notNull;
 public class PageQuery implements Serializable {
   private static final long serialVersionUID = -4017886857226927363L;
 
-  public static enum Order {
+  public enum Order {
     asc, desc
   }
 
@@ -81,15 +81,15 @@ public class PageQuery implements Serializable {
     return iterable;
   }
 
-    /**
-     * 根据Page内容来修正pipeline.
-     *
-     * @return 修正后的pipeline
-     */
-    public Collection<Bson> apply() {
-        final List<Bson> pipeline = new ArrayList<>();
-        if (StringUtils.isNotBlank(sort)) {
-            pipeline.add(Aggregates.sort(Order.asc == order ? Sorts.ascending(sort) : Sorts.descending(sort)));
+  /**
+   * 根据Page内容来修正pipeline.
+   *
+   * @return 修正后的pipeline
+   */
+  public Collection<Bson> apply() {
+    final List<Bson> pipeline = new ArrayList<>();
+    if (StringUtils.isNotBlank(sort)) {
+      pipeline.add(Aggregates.sort(Order.asc == order ? Sorts.ascending(sort) : Sorts.descending(sort)));
         }
         if (offset > 0) {
             pipeline.add(Aggregates.skip(offset));

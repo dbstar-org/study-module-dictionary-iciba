@@ -9,6 +9,7 @@ import io.github.dbstarll.study.entity.ext.Exchange;
 import io.github.dbstarll.study.entity.ext.Part;
 import io.github.dbstarll.study.entity.ext.Phonetic;
 import io.github.dbstarll.utils.http.client.HttpClientFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.ThrowingConsumer;
@@ -28,9 +29,29 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * 测试DictionaryApi.
  */
 class DictionaryApiTest {
+    private static final String TOKEN_KEY = "DICTIONARY_API_KEY";
+
+    private String getDictionaryApiKey() {
+        final String keyFromProperty = System.getProperty(TOKEN_KEY);
+        if (StringUtils.isNotBlank(keyFromProperty)) {
+            return keyFromProperty;
+        }
+
+        final String opts = System.getenv("MAVEN_OPTS");
+        if (StringUtils.isNotBlank(opts)) {
+            for (String opt : StringUtils.split(opts)) {
+                if (opt.startsWith("-D" + TOKEN_KEY + "=")) {
+                    return opt.substring(3 + TOKEN_KEY.length());
+                }
+            }
+        }
+
+        return null;
+    }
+
     private void useApi(ThrowingConsumer<DictionaryApi> consumer) throws Throwable {
         try (CloseableHttpClient client = new HttpClientFactory().build()) {
-            consumer.accept(new DictionaryApi(client, new ObjectMapper(), "7A39163AF82AEEC16FD0CC5F5BDFBE16"));
+            consumer.accept(new DictionaryApi(client, new ObjectMapper(), getDictionaryApiKey()));
         }
     }
 

@@ -1,1 +1,1 @@
-# study-module
+# study-module-dictionary-iciba

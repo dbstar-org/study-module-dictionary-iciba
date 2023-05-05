@@ -1,4 +1,4 @@
-package io.github.dbstarll.study.utils;
+package io.github.dbstarll.study.dictionary.iciba;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -11,14 +11,18 @@ import io.github.dbstarll.study.entity.enums.PhoneticKey;
 import io.github.dbstarll.study.entity.ext.Exchange;
 import io.github.dbstarll.study.entity.ext.Part;
 import io.github.dbstarll.study.entity.ext.Phonetic;
+import io.github.dbstarll.utils.http.client.request.RelativeUriResolver;
+import io.github.dbstarll.utils.json.jackson.JsonApiClient;
 import io.github.dbstarll.utils.lang.enums.EnumUtils;
 import io.github.dbstarll.utils.lang.wrapper.IterableWrapper;
+import io.github.dbstarll.utils.net.api.ApiException;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.hc.client5.http.classic.HttpClient;
+import org.apache.hc.core5.http.io.support.ClassicRequestBuilder;
 
 import java.io.IOException;
 import java.net.URL;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -26,17 +30,28 @@ import java.util.Map;
 import java.util.Set;
 
 import static org.apache.commons.lang3.Validate.notBlank;
-import static org.apache.commons.lang3.Validate.notNull;
 
-public class DictionaryApi {
-    private static final String BASE_URL = "http://dict-co.iciba.com/api/dictionary.php?type=json";
+public final class DictionaryApi extends JsonApiClient {
+    private final String key;
 
-    private final String queryUrl;
-    private final ObjectMapper objectMapper;
+    /**
+     * 构建DictionaryApi.
+     *
+     * @param httpClient   HttpClient
+     * @param objectMapper ObjectMapper
+     * @param key          key
+     */
+    public DictionaryApi(final HttpClient httpClient, final ObjectMapper objectMapper, final String key) {
+        super(httpClient, true, objectMapper);
+        setUriResolver(new RelativeUriResolver("http://dict-co.iciba.com"));
+        this.key = notBlank(key, "key not set");
+    }
 
-    public DictionaryApi(String key, ObjectMapper objectMapper) {
-        this.queryUrl = BASE_URL + "&key=" + notBlank(key);
-        this.objectMapper = notNull(objectMapper);
+    @Override
+    protected ClassicRequestBuilder preProcessing(final ClassicRequestBuilder builder) throws ApiException {
+        return super.preProcessing(builder)
+                .addParameter("type", "json")
+                .addParameter("key", key);
     }
 
     /**
@@ -46,13 +61,13 @@ public class DictionaryApi {
      * @return 单词对应的Word对象，如果没有匹配的释义，则返回null
      * @throws IOException 网络异常
      */
-    public Word query(String word) throws IOException {
-        if (StringUtils.containsWhitespace(notBlank(word))) {
+    public Word query(final String word) throws IOException, ApiException {
+        if (StringUtils.containsWhitespace(notBlank(word, "word not set"))) {
             throw new IllegalArgumentException("word contains whitespace: " + word);
         }
-        final URL url = new URL(queryUrl + "&w=" + word.toLowerCase());
-        final String json = IOUtils.toString(url, StandardCharsets.UTF_8);
-        return parseWord(objectMapper.readTree(json));
+        return parseWord(execute(get("/api/dictionary.php")
+                .addParameter("w", word.toLowerCase())
+                .build(), JsonNode.class));
     }
 
     private static Word parseWord(final JsonNode node) throws IOException {
@@ -62,8 +77,8 @@ public class DictionaryApi {
             word.setCri(cri.asInt() == 1);
             word.setName(node.get("word_name").asText().trim());
             word.setExchanges(parseExchanges(word.getName(), node.get("exchange")));
-            final JsonNode symbols = node.get("symbols");
-            if (symbols != null && symbols.isArray() && symbols.size() > 0) {
+            final JsonNode symbols = node.path("symbols");
+            if (symbols.isArray() && symbols.size() > 0) {
                 final JsonNode symbol = symbols.get(0);
                 word.setPhonetics(parsePhonetics(symbol));
                 word.setParts(parseParts(symbol.get("parts")));
@@ -80,16 +95,10 @@ public class DictionaryApi {
                 final String key = entry.getKey();
                 final JsonNode exchangeNode = entry.getValue();
                 if (key.startsWith("word_") && exchangeNode.isArray() && exchangeNode.size() > 0) {
-                    final ExchangeKey exchangeKey;
-                    try {
-                        exchangeKey = EnumUtils.valueOf(ExchangeKey.class, key.substring(5));
-                    } catch (IllegalArgumentException ex) {
-                        throw new IllegalArgumentException("Unknown ExchangeKey:" + key, ex);
-                    }
-
+                    final ExchangeKey exchangeKey = EnumUtils.valueOf(ExchangeKey.class, key.substring(5));
                     final String exchangeValue = exchangeNode.get(0).asText().trim();
-                    exchanges
-                            .add(new Exchange(exchangeKey, exchangeValue, ExchangeUtils.classify(exchangeKey, word, exchangeValue)));
+                    exchanges.add(new Exchange(exchangeKey, exchangeValue,
+                            ExchangeUtils.classify(exchangeKey, word, exchangeValue)));
                 }
             }
         }
@@ -100,12 +109,12 @@ public class DictionaryApi {
         final Set<Phonetic> phonetics = new HashSet<>();
         if (node != null && !node.isNull()) {
             for (PhoneticKey key : PhoneticKey.values()) {
-                final JsonNode symbolNode = node.get("ph_" + key.name());
+                final JsonNode symbolNode = node.get("ph_" + EnumUtils.name(key));
                 if (symbolNode != null && !symbolNode.isNull()) {
                     final String symbol = symbolNode.asText().trim();
                     if (StringUtils.isNotBlank(symbol)) {
                         final Phonetic phonetic = new Phonetic(key, symbol);
-                        final JsonNode urlNode = node.get("ph_" + key.name() + "_mp3");
+                        final JsonNode urlNode = node.get("ph_" + EnumUtils.name(key) + "_mp3");
                         if (urlNode != null && !urlNode.isNull()) {
                             final String url = urlNode.asText();
                             if (StringUtils.isNotBlank(url)) {
@@ -141,16 +150,10 @@ public class DictionaryApi {
 
     private static List<PartKey> parsePartKey(final String key) {
         final List<PartKey> keys = new ArrayList<>();
-        for (String k : StringUtils.split(key.replaceAll("\\.| ", "").replace('-', '_'), '&')) {
-            try {
-                keys.add(EnumUtils.valueOf(PartKey.class, k));
-            } catch (IllegalArgumentException ex) {
-                try {
-                    keys.add(EnumUtils.valueOf(PartKey.class, '_' + k));
-                } catch (IllegalArgumentException ex2) {
-                    throw new IllegalArgumentException("Unknown PartKey:" + key, ex);
-                }
-            }
+        for (String k : StringUtils.split(key
+                .replaceAll("[. ]", "")
+                .replace('-', '_'), '&')) {
+            keys.add(EnumUtils.valueOf(PartKey.class, k));
         }
         return keys;
     }

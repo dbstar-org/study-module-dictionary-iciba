@@ -9,11 +9,11 @@
   </parent>
 
   <groupId>io.github.dbstarll.study</groupId>
-  <artifactId>study-module</artifactId>
+  <artifactId>study-module-dictionary-iciba</artifactId>
   <version>1.0.3-SNAPSHOT</version>
 
-  <description>study module</description>
-  <url>https://github.com/dbstar-org/study-module</url>
+  <description>study dictionary module for iciba</description>
+  <url>https://github.com/dbstar-org/study-module-dictionary-iciba</url>
 
   <scm>
     <connection>scm:git:${project.git.git.root}</connection>
@@ -23,7 +23,7 @@
   </scm>
 
   <properties>
-    <project.git.project>study-module</project.git.project>
+    <project.git.project>study-module-dictionary-iciba</project.git.project>
     <!-- module version -->
     <version.study-model>1.0.0-SNAPSHOT</version.study-model>
     <version.utils-net-api>1.1.0</version.utils-net-api>

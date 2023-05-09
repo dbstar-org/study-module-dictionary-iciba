@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.StringJoiner;
 
 @JsonIgnoreProperties({"word_symbol", "symbol_mp3"})
-public final class SymbolModel {
+final class SymbolModel {
     @JsonProperty("ph_en")
     private String en;
     @JsonProperty("ph_am")
@@ -23,7 +23,7 @@ public final class SymbolModel {
 
     private List<PartModel> parts;
 
-    public String getEn() {
+    String getEn() {
         return en;
     }
 
@@ -31,7 +31,7 @@ public final class SymbolModel {
         this.en = en;
     }
 
-    public String getAm() {
+    String getAm() {
         return am;
     }
 
@@ -39,7 +39,7 @@ public final class SymbolModel {
         this.am = am;
     }
 
-    public String getOther() {
+    String getOther() {
         return other;
     }
 
@@ -47,7 +47,7 @@ public final class SymbolModel {
         this.other = other;
     }
 
-    public String getEnMp3() {
+    String getEnMp3() {
         return enMp3;
     }
 
@@ -55,7 +55,7 @@ public final class SymbolModel {
         this.enMp3 = enMp3;
     }
 
-    public String getAmMp3() {
+    String getAmMp3() {
         return amMp3;
     }
 
@@ -63,7 +63,7 @@ public final class SymbolModel {
         this.amMp3 = amMp3;
     }
 
-    public String getTtsMp3() {
+    String getTtsMp3() {
         return ttsMp3;
     }
 
@@ -71,7 +71,7 @@ public final class SymbolModel {
         this.ttsMp3 = ttsMp3;
     }
 
-    public List<PartModel> getParts() {
+    List<PartModel> getParts() {
         return parts;
     }
 

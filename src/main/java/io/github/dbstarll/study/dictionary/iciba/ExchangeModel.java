@@ -5,7 +5,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.StringJoiner;
 
-public final class ExchangeModel {
+final class ExchangeModel {
     @JsonProperty("word_pl")
     private String pl;
     @JsonProperty("word_third")
@@ -21,7 +21,7 @@ public final class ExchangeModel {
     @JsonProperty("word_est")
     private String est;
 
-    public String getPl() {
+    String getPl() {
         return pl;
     }
 
@@ -29,7 +29,7 @@ public final class ExchangeModel {
         this.pl = first(values);
     }
 
-    public String getThird() {
+    String getThird() {
         return third;
     }
 
@@ -37,7 +37,7 @@ public final class ExchangeModel {
         this.third = first(values);
     }
 
-    public String getPast() {
+    String getPast() {
         return past;
     }
 
@@ -45,7 +45,7 @@ public final class ExchangeModel {
         this.past = first(values);
     }
 
-    public String getDone() {
+    String getDone() {
         return done;
     }
 
@@ -53,7 +53,7 @@ public final class ExchangeModel {
         this.done = first(values);
     }
 
-    public String getIng() {
+    String getIng() {
         return ing;
     }
 
@@ -61,7 +61,7 @@ public final class ExchangeModel {
         this.ing = first(values);
     }
 
-    public String getEr() {
+    String getEr() {
         return er;
     }
 
@@ -69,7 +69,7 @@ public final class ExchangeModel {
         this.er = first(values);
     }
 
-    public String getEst() {
+    String getEst() {
         return est;
     }
 

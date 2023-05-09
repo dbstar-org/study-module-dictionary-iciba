@@ -8,11 +8,11 @@ import java.util.StringJoiner;
 import java.util.stream.Collectors;
 
 @JsonIgnoreProperties("part_name")
-public final class PartModel {
+final class PartModel {
     private String part;
     private List<String> means;
 
-    public String getPart() {
+    String getPart() {
         return part;
     }
 
@@ -20,7 +20,7 @@ public final class PartModel {
         this.part = part;
     }
 
-    public List<String> getMeans() {
+    List<String> getMeans() {
         return means;
     }
 

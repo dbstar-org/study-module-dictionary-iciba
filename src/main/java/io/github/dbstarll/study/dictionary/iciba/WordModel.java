@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import java.util.StringJoiner;
 
-public final class WordModel {
+final class WordModel {
     @JsonProperty("word_name")
     private String name;
 
@@ -16,7 +16,7 @@ public final class WordModel {
 
     private List<SymbolModel> symbols;
 
-    public String getName() {
+    String getName() {
         return name;
     }
 
@@ -24,7 +24,7 @@ public final class WordModel {
         this.name = name;
     }
 
-    public boolean isCri() {
+    boolean isCri() {
         return cri;
     }
 
@@ -32,7 +32,7 @@ public final class WordModel {
         this.cri = cri == 1;
     }
 
-    public ExchangeModel getExchange() {
+    ExchangeModel getExchange() {
         return exchange;
     }
 
@@ -40,7 +40,7 @@ public final class WordModel {
         this.exchange = exchange;
     }
 
-    public List<SymbolModel> getSymbols() {
+    List<SymbolModel> getSymbols() {
         return symbols;
     }
 

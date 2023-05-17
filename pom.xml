@@ -26,8 +26,7 @@
     <project.git.project>study-module-dictionary-iciba</project.git.project>
     <!-- module version -->
     <version.study-model>1.0.0-SNAPSHOT</version.study-model>
-    <version.utils-net-api>1.1.0</version.utils-net-api>
-    <version.utils-json>1.1.0</version.utils-json>
+    <version.utils-json-api>1.1.1</version.utils-json-api>
     <version.jackson>2.14.2</version.jackson>
     <version.logback>1.3.5</version.logback>
   </properties>
@@ -40,13 +39,8 @@
     </dependency>
     <dependency>
       <groupId>io.github.dbstarll.utils</groupId>
-      <artifactId>utils-net-api</artifactId>
-      <version>${version.utils-net-api}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.github.dbstarll.utils</groupId>
-      <artifactId>utils-json</artifactId>
-      <version>${version.utils-json}</version>
+      <artifactId>utils-json-api</artifactId>
+      <version>${version.utils-json-api}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
